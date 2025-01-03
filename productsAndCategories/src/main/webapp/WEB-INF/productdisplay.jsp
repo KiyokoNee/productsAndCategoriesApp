@@ -22,12 +22,10 @@
 		<hr>
 		<h2>Categories</h2>
 		<ul>
-			<c:forEach var="category" items="categories">
+			<c:forEach var="category" items="productcategories">
 				<li><c:out value="${category.name}"></c:out></li>
 			</c:forEach>
 		</ul>
 		<hr>
-		<h2>Add Category:</h2>
-		<form:form></form:form>
 	</body>
 </html>

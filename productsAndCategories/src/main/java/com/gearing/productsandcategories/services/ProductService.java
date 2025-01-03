@@ -42,4 +42,12 @@ public class ProductService {
 		
 		productRepo.save(product);
 	}
+	
+	public List<Product> allByCategory(Category category) {
+		return productRepo.findAllByCategories(category);
+	}
+	
+	public List<Product> allProductssNotTiedTo(Category category) {
+		return productRepo.findByCategoriesNotContains(category);
+	}
 }
