@@ -1,5 +1,6 @@
 package com.gearing.productsandcategories.controllers;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.gearing.productsandcategories.models.Category;
 import com.gearing.productsandcategories.models.Product;
@@ -47,14 +50,50 @@ public class ProjectController {
 	
 	@GetMapping("/products/{id}")
 	public String productDetails(Model model, @PathVariable Long id) {
-		Optional<Product> product = productServ.getProductById(id);
-		if(product.isEmpty())
+		Optional<Product> optionalProduct = productServ.getProductById(id);
+		if(optionalProduct.isEmpty())
 			return "redirect:/";
 		
-		model.addAttribute("product", product.get());
-		model.addAttribute("productcategories", categoryServ.allCategories());
+		Product product = optionalProduct.get();
+		List<Category> productcategories = categoryServ.allByProduct(product);
+		List<Category> othercategories = categoryServ.allProductsNotContains(product);
+		
+		model.addAttribute("product", product);
+		model.addAttribute("productcategories", productcategories);
+		model.addAttribute("othercategories", othercategories);
 		
 		return "productdisplay.jsp";
+	}
+	
+	@PutMapping("/products/{productId}/add")
+	public String addToProduct(@PathVariable Long productId, @RequestParam Long categoryId) {
+		productServ.addCategoryToProduct(categoryId, productId);
+		
+		return "redirect:/products/" + productId;
+	}
+	
+	@GetMapping("/categories/{id}")
+	public String categoryDetails(Model model, @PathVariable Long id) {
+		Optional<Category> optionalCategory = categoryServ.getCategoryById(id);
+		if(optionalCategory.isEmpty())
+			return "redirect:/";
+		
+		Category category = optionalCategory.get();
+		List<Product> categoryproducts = productServ.allByCategory(category);
+		List<Product> otherproducts = productServ.allProductsNotTiedTo(category);
+		
+		model.addAttribute("category", category);
+		model.addAttribute("categoryproducts", categoryproducts);
+		model.addAttribute("otherproducts", otherproducts);
+		
+		return "categorydisplay.jsp";
+	}
+	
+	@PutMapping("/categories/{categoryId}/add")
+	public String addToCategory(@PathVariable Long categoryId, @RequestParam Long productId) {
+		productServ.addCategoryToProduct(categoryId, productId);
+		
+		return "redirect:/categories/" + categoryId;
 	}
 	
 	@PostMapping("/products/create")

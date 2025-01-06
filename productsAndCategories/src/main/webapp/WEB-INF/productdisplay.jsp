@@ -22,10 +22,21 @@
 		<hr>
 		<h2>Categories</h2>
 		<ul>
-			<c:forEach var="category" items="productcategories">
+			<c:forEach var="category" items="${productcategories}">
 				<li><c:out value="${category.name}"></c:out></li>
 			</c:forEach>
 		</ul>
 		<hr>
+		<form:form action="/products/${product.id}/add" method="put">
+			<label>
+				Categories
+				<select id="categoryId" name="categoryId">
+					<c:forEach var="category" items="${othercategories}">
+						<option value="${category.id}"><c:out value="${category.name}"></c:out></option>
+					</c:forEach>
+				</select>
+			</label>
+			<button type="submit">Add</button>
+		</form:form>
 	</body>
 </html>

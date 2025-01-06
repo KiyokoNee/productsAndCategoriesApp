@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.gearing.productsandcategories.models.Category;
+import com.gearing.productsandcategories.models.Product;
 import com.gearing.productsandcategories.repositories.CategoryRepository;
 
 @Service
@@ -18,7 +19,7 @@ public class CategoryService {
 		return categoryRepo.findAll();
 	}
 	
-	public Optional<Category> categoryById(Long id) {
+	public Optional<Category> getCategoryById(Long id) {
 		return categoryRepo.findById(id);
 	}
 	
@@ -28,5 +29,13 @@ public class CategoryService {
 	
 	public Category updateCategory(Category category) {
 		return categoryRepo.save(category);
+	}
+	
+	public List<Category> allByProduct(Product product) {
+		return categoryRepo.findAllByProducts(product);
+	}
+	
+	public List<Category> allProductsNotContains(Product product) {
+		return categoryRepo.findByProductsNotContains(product);
 	}
 }

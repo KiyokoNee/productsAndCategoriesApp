@@ -47,7 +47,7 @@ public class ProductService {
 		return productRepo.findAllByCategories(category);
 	}
 	
-	public List<Product> allProductssNotTiedTo(Category category) {
+	public List<Product> allProductsNotTiedTo(Category category) {
 		return productRepo.findByCategoriesNotContains(category);
 	}
 }
